@@ -1,0 +1,21 @@
+<div class="container-fluid rounded-5 inner-shadow my-4 col-12 col-ls-8 bg-light overflow-hidden"
+     style="max-width: 1000px">
+    <div class="row justify-content-between">
+        <div class="d-flex justify-content-between py-1 px-3 px-md-5 bg-warning inner-shadow">
+            <span>Автор: <strong>{{ post.author }}</strong></span>
+            <span>{{ post.created_at }}</span>
+        </div>
+        <hr class="m-0">
+        <a href="{% url 'post' post.pk %}" class="text-decoration-none link-dark" title="Нажмите, чтобы перейти к объявлению">
+            <div class="text-center col-12 my-3">
+                <h2>{{ post.title }}</h2>
+            </div>
+        </a>
+        <hr class="m-0">
+        <div class="d-flex justify-content-between py-1 px-3 px-md-5">
+            <span>Откликов: {{ post.comments_count }}</span>
+            <span>Категория: <strong>{{ post.get_category_display }}</strong></span>
+            {{ request.user.email.verified }}
+        </div>
+    </div>
+</div>

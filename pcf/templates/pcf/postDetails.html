@@ -1,0 +1,75 @@
+{% extends 'pcf/default.html' %}
+
+{% block title %}{{ post.title }}{% endblock %}
+
+
+{% block content %}
+    <div class="bg-light inner-shadow rounded-5 my-4 overflow-hidden">
+        <div class="d-flex justify-content-between py-2 px-5 bg-warning inner-shadow">
+            <span><strong>{{ post.author }}</strong></span>
+            <span>Категория: <strong>{{ post.get_category_display }}</strong></span>
+            <span>{{ post.created_at|date:"d.m.Y H:i" }}</span>
+        </div>
+        <hr class="m-0">
+        <div class="pb-3 px-5">
+            <h1 class="mt-3 mb-4">{{ post.title }}</h1>
+            <div class="text-start">{{ post.content|safe }}</div>
+        </div>
+        <div>
+            {% if post.author == user %}
+                    <a class="btn btn-warning mt-3 mb-3" href="{% url 'post_update' post.pk %}">Редактировать пост</a>
+                {% endif %}
+            {% if post.updated_at|date:"d.m.Y H:i" != post.created_at|date:"d.m.Y H:i" %}
+                <p>Изменено: {{ post.updated_at|date:"d.m.Y H:i" }}</p>
+            {% endif %}
+        </div>
+    </div>
+
+    {% if is_authenticated %}
+        <button class="btn btn-warning mb-4 mt-3 shadow" data-bs-toggle="modal" data-bs-target="#addComment">
+            Добавить отклик
+        </button>
+
+        <div class="modal fade" id="addComment" tabindex="-1" aria-labelledby="addCommentModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header bg-warning">
+                        <label for="commentText" class="modal-title fs-5" id="addCommentModalLabel">Добавить отклик</label>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form method="post" action="{% url 'add_comment' post.pk %}" id="addCommentForm">
+                        {% csrf_token %}
+                        <div class="modal-body">
+                            <textarea type="text" name="text" id="commentText" class="form-control"
+                                      style="min-height: 150px;" required
+                                      placeholder="Введите текст..."></textarea>
+                        </div>
+                        <div class="modal-footer justify-content-center">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                            <button type="submit" class="btn btn-warning" id="confirm-add" data-bs-dismiss="modal">
+                                Добавить
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    {% if post.comments.all %}
+        <h3 class="text-light mt-3">Отклики</h3>
+        <ul class="list-unstyled mt-4 mb-5">
+            {% for comment in post.comments.all|slice:'::-1' %}
+                <li class="inner-shadow my-4 bg-light border border-dark border-1 rounded-5 mx-auto overflow-hidden" style="max-width: 500px">
+                    <div class="text-center {% if not comment.accepted %}bg-warning{% else %}bg-success{% endif %} inner-shadow d-flex justify-content-between">
+                        <span class="py-2 px-4"><strong>{{ comment.author }}</strong></span>
+                        <span class="py-2 px-4">{{ comment.created_at|date:"d.m.Y H:i" }}</span>
+                    </div>
+                    <div class="py-3">
+                        {{ comment.text }}
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endblock %}

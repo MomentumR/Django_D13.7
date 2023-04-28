@@ -1,0 +1,21 @@
+{% extends 'pcf/default.html' %}
+
+
+{% block title %}{% if 'update' in request.path %}Редактирование{% else %}Добавление{% endif %} объявления{% endblock %}
+
+
+{% block content %}
+    <h1 class="my-3 text-light">{% if 'update' in request.path %}Редактирование{% else %}Добавление{% endif %} объявления</h1>
+
+    <div class="container-fluid rounded-5 inner-shadow py-4 my-4 col-12 col-ls-8 bg-light bg-gradient"
+     style="max-width: 900px">
+        <form method="post" class="text-center">
+            {% csrf_token %}
+            {{ form.media }}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-warning my-3">
+                {% if 'update' in request.path %}Редактировать{% else %}Добавить{% endif %}
+            </button>
+        </form>
+    </div>
+{% endblock %}

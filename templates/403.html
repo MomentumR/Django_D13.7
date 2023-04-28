@@ -1,0 +1,13 @@
+{% extends 'pcf/default.html' %}
+
+{% block title %}403{% endblock %}
+{% block content %}
+    <div class="container-fluid rounded-5 inner-shadow my-4 col-12 col-ls-8 bg-light pt-1 pb-3">
+        <h1 class="my-4">Доступ запрещен</h1>
+        {% if message %}
+            <p>{{ message|safe }}</p>
+        {% else %}
+            <p>Вы не имеет доступа к совершению данного действия / просмотра данной страницы</p>
+        {% endif %}
+    </div>
+{% endblock %}

@@ -1,0 +1,39 @@
+{% extends "pcf/default.html" %}
+{% load widget_tweaks %}
+
+{% block title %}Регистрация{% endblock %}
+
+{% block content %}
+    <h1 class="my-4 text-light">Форма регистрации</h1>
+    <div class="container d-flex flex-column rounded-5 bg-light inner-shadow py-4" style="max-width: 330px">
+        <form method="post" action="{% url 'account_signup' %}">
+            {% csrf_token %}
+            {% for f in form %}
+                {% if f.label != 'Подписаться на новостную рассылку' %}
+                    <div class="d-flex justify-content-center">{{ f|add_class:'form-control my-2 shadow'|attr:'style:max-width:250px' }}</div>
+                {% else %}
+                    <div class="mt-4">{{ f.label }}{{ f|add_class:'ms-3' }}</div>
+                {% endif %}
+            {% endfor %}
+
+
+            <button class="btn btn-warning mt-5 mb-2" type="submit">Зарегистрироваться</button>
+        </form>
+    </div>
+    {% if form.errors %}
+        <div class="d-flex justify-content-center my-4">
+            <ul class="list-unstyled list-group w-50">
+                {% for name, errors in form.errors.items %}
+                    {% for error in errors %}
+                        <li class="list-group-item list-group-item-danger">{{ error }}</li>
+                    {% endfor %}
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+
+   <div class="rounded-5 bg-light inner-shadow mx-auto my-4 p-4" style="max-width: 330px">
+       <p>Уже зарегистировались?</p>
+       <a class="btn btn-warning" href="{% url 'account_login' %}">Войти</a>
+   </div>
+{% endblock %}

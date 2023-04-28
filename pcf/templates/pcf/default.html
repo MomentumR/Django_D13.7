@@ -1,0 +1,159 @@
+{% load static %}
+{% load pcf.custom_filters %}
+
+<!DOCTYPE html>
+<html lang="en" class="h-100">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <meta name="description" content="Simple NewsPaper Site on Django 4.1.7"/>
+    <meta name="author" content="OneHandedPirate"/>
+    <title>{% block title %}{% endblock title %} - PeaceCraftFun</title>
+    <!-- Favicon-->
+    <link rel="icon" type="image/x-icon" href={% static "pcf/assets/favicon.ico" %} />
+    <!-- Core theme CSS (includes Bootstrap)-->
+    <link href={% static 'pcf/css/styles.css' %} rel="stylesheet"/>
+    <script src="https://kit.fontawesome.com/32d5dc53de.js" crossorigin="anonymous"></script>
+    {% block head %}{% endblock %}
+</head>
+
+<body class="d-flex flex-column h-100" style="background-image: url({% static 'pcf/assets/site_bd2.jpg' %}); background-size: cover; background-position: center center; background-repeat: no-repeat; background-attachment: fixed;">
+{% with is_authenticated=request.user.is_authenticated is_subscribed=request.user|is_subscribed %}
+    <!-- Responsive navbar-->
+    <nav class="navbar navbar-expand-lg navbar-light bg-warning">
+    <div class="container-fluid col-11 col-lg-10 col-xl-12" style="max-width: 1200px">
+        <span>
+            <a class="navbar-brand fw-bold" href="{% url 'home' %}">PeaceCraftFun</a>
+            {% if is_authenticated %}
+                |
+                {{ user }}
+            {% endif %}
+        </span>
+        {% if menu %}
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0 text-center">
+                    {% for item in menu %}
+                        {% if item.url_name == request.resolver_match.url_name %}
+                            <li class="nav-item"><span class="nav-link active"
+                                                       aria-current="page"><strong>{{ item.title }}</strong></span></li>
+                        {% elif item.title == 'Вход' %}
+                            {% if not is_authenticated %}
+                                <li class="nav-item"><a class="nav-link" aria-current="page"
+                                                        href="{% url 'account_login' %}">{{ item.title }}</a></li>
+                            {% endif %}
+                        {% elif item.title == 'Выход' %}
+                            {% if is_authenticated %}
+                                <li class="nav-item"><a class="nav-link" aria-current="page" data-bs-toggle="modal"
+                                                        data-bs-target="#logoutModal"
+                                                        style="cursor: pointer">{{ item.title }}</a></li>
+                            {% endif %}
+                        {% elif item.title == 'Добавить' %}
+                            {% if is_authenticated %}
+                                <li class="nav-item"><a class="nav-link" aria-current="page"
+                                                        href='{% url item.url_name %}'
+                                                        title="Добавить объявление">{{ item.title }}</a></li>
+                            {% endif %}
+                        {% elif item.title == 'Рассылка' %}
+                            {% if user.is_staff %}
+                                <li class="nav-item"><a class="nav-link" aria-current="page"
+                                                        href='{% url item.url_name %}'>{{ item.title }}</a></li>
+                            {% else %}
+                            {% endif %}
+                        {% elif item.title == 'Подписаться' %}
+                            {% if is_authenticated %}
+                                {% if not is_subscribed %}
+                                    <li class="nav-item"><a class="nav-link"
+                                                    href="{% url 'subscribe' %}"
+                                                    title="Подписаться на новостную рассылку">Подписаться</a></li>
+                                {% endif %}
+                            {% endif %}
+                        {% elif item.title == 'Отписаться'%}
+                            {% if is_authenticated %}
+                                {% if is_subscribed %}
+                                    <li class="nav-item"><a class="nav-link"
+                                                    href="{% url 'unsubscribe' %}"
+                                                    title="Отписаться от новостной рассылки">Отписаться</a></li>
+                                {% endif %}
+                            {% endif %}
+                        {% else %}
+                            {% if item.url_name %}
+                                <li class="nav-item"><a class="nav-link" aria-current="page"
+                                                        href='{% url item.url_name %}'>{{ item.title }}</a></li>
+                            {% else %}
+                                <li class="nav-item"><a class="nav-link" aria-current="page"
+                                                        href=''>{{ item.title }}</a></li>
+                            {% endif %}
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+    </div>
+</nav>
+
+<!-- Page content-->
+<div class="container-fluid">
+    <div class="text-center mx-auto container-fluid" style="max-width: 1200px">
+        {% block content %}
+        {% endblock content %}
+    </div>
+</div>
+
+<!-- Pagination-->
+{% if is_paginated %}
+    {% include 'pcf/pagination.html' %}
+{% endif %}
+
+<!-- Footer-->
+<footer class="bg-warning mt-auto">
+    <div class="row text-dark p-3 col-sm-12 col-md-10 mx-auto" style="max-width: 1200px">
+        <div class="text-start col-8">
+            <p>© 2023 PeaceCraftFun</p>
+        </div>
+        <div class="text-end col-4 ">
+            <a class="fa-brands fa-github fa-2xl m-1 text-decoration-none" href="https://github.com/OneHandedPirate" style="height:25px"
+               target="_blank"></a>
+            <a class="fa-brands fa-vk fa-2xl m-1 text-decoration-none" href="https://vk.com/onehandedpirate" style="height:25px"
+               target="_blank"></a>
+            <a class="fa-brands fa-reddit fa-2xl m-1 text-decoration-none" style="height:25px"
+               href="https://www.reddit.com/user/OneHandedPirateMKII" target="_blank"></a>
+        </div>
+    </div>
+</footer>
+
+<!-- Logout Modal -->
+{% if is_authenticated %}
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="logoutModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-warning">
+                    <h5 class="modal-title" id="logoutModalLabel">Выход с сайта</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <p>Уверены в своем решении?</p>
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <button type="button" class="btn btn-warning" data-bs-dismiss="modal">Остаться на сайте</button>
+                    <form method="post" action="{% url 'account_logout' %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger">Выйти</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endif %}
+
+
+{% endwith %}
+<!-- JS-->
+<script>const csrfToken = `{{ csrf_token }}`</script>
+<script src="{% static 'pcf/js/bootstrap.bundle.min.js' %}"></script>
+</body>
+</html>

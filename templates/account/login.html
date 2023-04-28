@@ -1,0 +1,36 @@
+{% extends 'pcf/default.html' %}
+
+{% load widget_tweaks %}
+
+{% block title %}Вход{% endblock %}
+{% block content %}
+   <h1 class="my-4 text-light">Вход</h1>
+        <div class="container d-flex flex-column inner-shadow bg-light rounded-5 p-3" style="max-width: 330px">
+    <form method="post" action="{% url 'account_login' %}">
+       {% csrf_token %}
+        <div class="d-flex my-3 justify-content-center">{{ form.login|add_class:'form-control shadow'|attr:'style:width:250px'|attr:'placeholder:Username или email' }}</div>
+
+        <div class="d-flex my-3 justify-content-center">{{ form.password|add_class:'form-control shadow'|attr:'style:width:250px' }}</div>
+        <a class="d-block" href="{% url 'account_reset_password' %}">Забыли пароль?</a>
+
+        <button class="btn-warning btn mb-2 mt-5" type="submit">Вход</button>
+    </form>
+    </div>
+
+    {% if form.errors %}
+            <div class="d-flex justify-content-center my-4">
+                <ul class="list-unstyled list-group w-50">
+                    {% for name, errors in form.errors.items %}
+                        {% for error in errors %}
+                            <li class="list-group-item list-group-item-danger">{{ error }}</li>
+                        {% endfor %}
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+
+    <div class="rounded-5 bg-light inner-shadow mx-auto my-4 p-4" style="max-width: 330px">
+        <p>Нет аккаунта?</p>
+        <a class="btn btn-warning" href="{% url 'account_signup' %}">Регистрация</a>
+    </div>
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends 'pcf/default.html' %}
+
+{% block title %}Личная страница{% endblock %}
+
+{% block content %}
+    <h1 class="text-light my-3">Личная страница</h1>
+    <div class="container-fluid rounded-5 inner-shadow my-4 bg-light pt-4 pb-1" style="max-width: 500px">
+        <p>Параметры поиска</p>
+        <button class="btn btn-warning my-3">Показать</button>
+    </div>
+     <ul class="list-unstyled mt-4 mb-5">
+            {% for comment in comments.all|slice:'::-1' %}
+                <li class="inner-shadow my-4 bg-light border border-dark border-1 rounded-5 mx-auto overflow-hidden" style="max-width: 500px">
+                    <div class="text-center {% if not comment.accepted %}bg-warning{% else %}bg-success{% endif %} inner-shadow d-flex justify-content-between">
+                        <span class="py-2 px-4"><strong>{{ comment.author }}</strong></span>
+                        <span class="py-2 px-4">{{ comment.created_at|date:"d.m.Y H:i" }}</span>
+                    </div>
+                    <div class="py-3">
+                        {{ comment.text }}
+                    </div>
+                    {% if not comment.accepted %}
+                        <a href="{% url 'accept_comment' comment.pk %}" class="btn btn-warning my-3">Принять</a>
+                    {% endif%}
+                </li>
+            {% endfor %}
+        </ul>
+{% endblock %}

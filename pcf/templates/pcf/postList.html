@@ -1,0 +1,9 @@
+{% extends 'pcf/default.html' %}
+
+{% block title %}Главная страница{% endblock %}
+
+{% block content %}
+    {% for post in posts %}
+        {% include 'pcf/postInList.html' %}
+    {% endfor %}
+{% endblock %}

@@ -1,0 +1,13 @@
+{% extends 'pcf/default.html' %}
+
+{% block title %}404{% endblock %}
+{% block content %}
+    <div class="container-fluid rounded-5 inner-shadow my-4 col-12 col-ls-8 bg-light pt-1 pb-3">
+        <h1 class="my-4">Страница не найдена</h1>
+        {% if message %}
+            <p>{{ message }}</p>
+        {% else %}
+            <p>Запрашиваемая вами страница не найдена</p>
+        {% endif %}
+    </div>
+{% endblock %}

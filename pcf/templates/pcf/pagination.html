@@ -1,0 +1,38 @@
+<nav>
+    <ul class="pagination justify-content-center my-4">
+        {% if page_obj.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page=1{% if filter_params %}{{ filter_params }}{% endif %}"
+                   aria-label="First">
+                    <span><<</span>
+                </a>
+            </li>
+        {% else %}
+            <li class="page-item disabled">
+                <span class="page-link"><<</span>
+            </li>
+        {% endif %}
+
+        {% for num in page_obj.paginator.page_range %}
+            {% if page_obj.number == num %}
+                <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+            {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                <li class="page-item"><a class="page-link" href="?page={{ num }}{% if filter_params %}{{ filter_params }}{% endif %}">{{ num }}</a></li>
+            {% endif %}
+        {% endfor %}
+
+        {% if page_obj.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page=
+                            {{ page_obj.paginator.num_pages }}{% if filter_params %}{{ filter_params }}{% endif %}"
+                   aria-label="Last">
+                    <span>>></span>
+                </a>
+            </li>
+        {% else %}
+            <li class="page-item disabled">
+                <span class="page-link">>></span>
+            </li>
+        {% endif %}
+    </ul>
+</nav>
