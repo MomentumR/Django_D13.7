@@ -47,7 +47,7 @@ INSTALLED_APPS = [
     'allauth.account',
     'djcelery_email',
     'django_filters',
-    ''
+    'debug_toolbar',
 ]
 
 MIDDLEWARE = [
@@ -58,6 +58,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 
     'pcf.middleware.VerifyEmailMiddleware'
 ]
@@ -144,7 +145,14 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-#Celery Settings
+CACHES = {
+    'default': {
+            'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+            'LOCATION': BASE_DIR / 'cache'
+        }
+}
+
+#Celery Config
 CELERY_TIMEZONE = TZ
 CELERY_BROKER_URL = f'redis://{REDIS_HOST}:{REDIS_PORT}/{REDIS_DB}'
 CELERY_RESULT_BACKEND = f'redis://{REDIS_HOST}:{REDIS_PORT}/{REDIS_DB}'
@@ -156,7 +164,7 @@ CELERY_BEAT_SCHEDULE = {
     },
 }
 
-#AllAuth Settings
+#AllAuth Config
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_USERNAME_REQUIRED = True
@@ -175,7 +183,7 @@ LOGIN_URL = '/accounts/login'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 
-#Отправка email
+#Email config
 EMAIL_HOST = "smtp.gmail.com"
 EMAIL_HOST_USER = EMAIL
 EMAIL_HOST_PASSWORD = EMAIL_PASSWORD
@@ -241,3 +249,8 @@ CKEDITOR_CONFIGS = {
 
 #django-celery-email settings
 EMAIL_BACKEND = 'djcelery_email.backends.CeleryEmailBackend'
+
+#For debug_toolbar
+INTERNAL_IPS = [
+    '127.0.0.1',
+]

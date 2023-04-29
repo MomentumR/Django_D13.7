@@ -3,6 +3,11 @@ from django.urls import reverse
 
 
 class VerifyEmailMiddleware:
+    """Middleware for users who are logged in but are not verified
+    their emails with OTC. If users are not verified the only paths
+    available to them are verification page, logout and resend
+    verification email"""
+
     def __init__(self, get_response):
         self.get_response = get_response
 

@@ -1,5 +1,6 @@
 {% load static %}
 {% load pcf.custom_filters %}
+{% load cache %}
 
 <!DOCTYPE html>
 <html lang="en" class="h-100">
@@ -79,6 +80,13 @@
                                                     title="Отписаться от новостной рассылки">Отписаться</a></li>
                                 {% endif %}
                             {% endif %}
+                        {% elif item.title == 'Личка' %}
+                            {% if is_authenticated %}
+                                <li class="nav-item"><a class="nav-link" aria-current="page"
+                                                        href='{% url item.url_name %}'
+                                                        title="Страница с откликами на ваши объявления">
+                                    {{ item.title }}</a></li>
+                            {% endif %}
                         {% else %}
                             {% if item.url_name %}
                                 <li class="nav-item"><a class="nav-link" aria-current="page"
@@ -109,21 +117,23 @@
 {% endif %}
 
 <!-- Footer-->
+{% cache 3600 footer %}
 <footer class="bg-warning mt-auto">
     <div class="row text-dark p-3 col-sm-12 col-md-10 mx-auto" style="max-width: 1200px">
         <div class="text-start col-8">
             <p>© 2023 PeaceCraftFun</p>
         </div>
         <div class="text-end col-4 ">
-            <a class="fa-brands fa-github fa-2xl m-1 text-decoration-none" href="https://github.com/OneHandedPirate" style="height:25px"
-               target="_blank"></a>
-            <a class="fa-brands fa-vk fa-2xl m-1 text-decoration-none" href="https://vk.com/onehandedpirate" style="height:25px"
-               target="_blank"></a>
+            <a class="fa-brands fa-github fa-2xl m-1 text-decoration-none"
+               href="https://github.com/OneHandedPirate" style="height:25px" target="_blank"></a>
+            <a class="fa-brands fa-vk fa-2xl m-1 text-decoration-none" href="https://vk.com/onehandedpirate"
+               style="height:25px" target="_blank"></a>
             <a class="fa-brands fa-reddit fa-2xl m-1 text-decoration-none" style="height:25px"
                href="https://www.reddit.com/user/OneHandedPirateMKII" target="_blank"></a>
         </div>
     </div>
 </footer>
+{% endcache %}
 
 <!-- Logout Modal -->
 {% if is_authenticated %}

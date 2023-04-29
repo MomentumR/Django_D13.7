@@ -6,7 +6,7 @@ from .models import Post, Comment
 class CommentFilter(df.FilterSet):
     post = df.ModelChoiceFilter(
         queryset=Post.objects.none(),
-        label='Поиск по объявлениям',
+        label='Поиск по вашим объявлениям',
         empty_label='Все отклики',
     )
 

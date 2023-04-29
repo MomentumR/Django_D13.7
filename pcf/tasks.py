@@ -11,8 +11,10 @@ from pcf.models import Post
 
 @shared_task
 def send_verification_code(code, email):
+    """Sends OTC to users email on user signup"""
+
     send_mail(
-        'Код для завершения регистрации на сайте PeaceCraftFun',
+        '[PeaceCraftFun] Код для завершения регистрации.',
         f'Для завершения регистрации введите следующий код в '
         f'соответствующее поле на странице http://127.0.0.1:8000/verify_email:\n\n{code}\n\nНа это у вас есть 24 часа,'
         f' иначе ваш аккаунт будет удален.',
@@ -25,8 +27,10 @@ def send_verification_code(code, email):
 
 @shared_task
 def resend_verification_code(code, email, time_left):
+    """Resends verification code with deletion the previous one"""
+
     send_mail(
-        'Повторная отправка кода подтверждения email с сайта PeaceCraftFun',
+        '[PeaceCraftFun] Повторная отправка кода подтверждения email.',
         f'Для завершения регистрации введите следующий код в '
         f'соответствующее поле на странице http://127.0.0.1:8000/verify_email:\n\n{code}\n\n'
         f'У вас осталось {time_left}. Предыдущие коды не действуют.',
@@ -39,6 +43,9 @@ def resend_verification_code(code, email, time_left):
 
 @shared_task
 def check_user_verified(user_id):
+    """Checks whether user is verified. If not, delete users
+    account (fires 24 hours after the user signup)"""
+
     try:
         user = User.objects.get(id=user_id)
         if not user.groups.filter(name='verified_users').exists():
@@ -51,8 +58,10 @@ def check_user_verified(user_id):
 
 @shared_task
 def notify_post_author(email, post_title, comment_author, comment_text):
+    """Notifies post author when someone comments his/her post"""
+
     send_mail(
-        f'Новый отклик на ваше объявление {post_title} на сайте PeaceCraftFun',
+        f'[PeaceCraftFun] Новый отклик на ваше объявление {post_title}.',
         f'Пользователь {comment_author} оставил следующий отклик под вашим объявлением:\n\n'
         f'{comment_text}',
         EMAIL,
@@ -65,6 +74,8 @@ def notify_post_author(email, post_title, comment_author, comment_text):
 
 @shared_task
 def notify_subscribers_weekly():
+    """Notifies subscribed users on new posts every week"""
+
     subscribers_emails = User.objects.filter(groups__name='subscribed_users').values_list('email', flat=True)
     new_posts = '<br>'.join(f'<a href="http://127.0.0.1:8000/{post[1]}">{post[0]}</a>'
                             for post in Post.objects.filter(created_at__gte=(timezone.now()-timedelta(days=7)))
@@ -83,6 +94,8 @@ def notify_subscribers_weekly():
 
 @shared_task
 def notify_comment_author(post_title, email, comment_text):
+    """Notifies comment author on its acceptance"""
+
     send_mail(
         subject=f'[PeaceCraftFun] Ваш отклик принят!',
         message=f'Ваш отклик\n\n{comment_text}\n\n на объявление\n\n{post_title}\n\n принят!',

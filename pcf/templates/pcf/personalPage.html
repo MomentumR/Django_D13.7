@@ -26,8 +26,7 @@
                     </div>
                     <button class="btn-sm btn-danger my-3" onclick="deleteComment('{% url 'delete_comment' comment.pk %}', {{ comment.pk }})">Удалить</button>
                     {% if not comment.accepted %}
-
-                        <button class="btn-sm btn-warning my-3" onclick="acceptComment('{% url 'accept_comment' comment.pk %}', {{ comment.pk }})">Принять</button>
+                        <button class="btn-sm btn-warning my-3 ms-2" onclick="acceptComment('{% url 'accept_comment' comment.pk %}', {{ comment.pk }})">Принять</button>
                     {% endif%}
                 </li>
             {% endfor %}

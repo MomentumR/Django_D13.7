@@ -56,10 +56,10 @@
         </div>
     {% endif %}
 
-    {% if post.comments.all %}
+    {% if comments %}
         <h3 class="text-light mt-3">Отклики</h3>
         <ul class="list-unstyled mt-4 mb-5">
-            {% for comment in post.comments.all|slice:'::-1' %}
+            {% for comment in comments|slice:'::-1' %}
                 <li class="inner-shadow my-4 bg-light border border-dark border-1 rounded-5 mx-auto overflow-hidden" style="max-width: 500px">
                     <div class="text-center {% if not comment.accepted %}bg-warning{% else %}bg-success{% endif %} inner-shadow d-flex justify-content-between">
                         <span class="py-2 px-4"><strong>{{ comment.author }}</strong></span>

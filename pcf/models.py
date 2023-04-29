@@ -1,9 +1,8 @@
-from datetime import datetime
-
 from django.db import models
 from django.contrib.auth.models import User
 from ckeditor.fields import RichTextField
 from django.urls import reverse_lazy
+from django.core.cache import cache
 
 
 class Post(models.Model):
@@ -23,6 +22,14 @@ class Post(models.Model):
 
     def get_absolute_url(self):
         return reverse_lazy('post', kwargs={'pk': self.id})
+
+    def save(self, *args, **kwargs):
+        cache.delete('post_list')
+        super().save(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        cache.delete('post_list')
+        super().delete(*args, **kwargs)
 
 
 class Comment(models.Model):

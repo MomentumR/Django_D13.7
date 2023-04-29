@@ -17,6 +17,8 @@ menu = [{'title': 'Главная', 'url_name': 'home'},
 
 
 def send_news_to_subscribers(subject, content):
+    """Send news to subscribers created by site staff"""
+
     subscribers_emails = User.objects.filter(groups__name='subscribed_users').values_list('email', flat=True)
     send_mail(
         subject=f'[PeaceCraftFun] {subject}',

@@ -45,6 +45,8 @@ class PostForm(forms.ModelForm):
 
 
 class VerifyEmailForm(forms.ModelForm):
+    """Form for verifying email with OTC"""
+
     class Meta:
         model = OneTimeCode
         fields = ['code']
@@ -56,12 +58,16 @@ class VerifyEmailForm(forms.ModelForm):
 
 
 class CommentForm(forms.ModelForm):
+    """Form for creating new comments"""
+
     class Meta:
         model = Comment
         fields = ['text']
 
 
 class NewsForm(forms.Form):
+    """Form for notification emails"""
+
     subject = forms.CharField(max_length=255, widget=forms.TextInput(attrs={'class': 'form-control mx-auto',
                                                                             'placeholder': 'Введите тему письма',
                                                                             'style': 'max-width:500px'}))
