@@ -15,4 +15,5 @@ urlpatterns = [
     path('subscribe/', subscribe, name='subscribe'),
     path('personal_page/', PersonalPageView.as_view(), name='personal_page'),
     path('<int:pk>/accept_comment/', accept_comment, name='accept_comment'),
+    path('<int:pk>/delete_comment/', delete_comment, name='delete_comment'),
 ]

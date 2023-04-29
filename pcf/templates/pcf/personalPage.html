@@ -4,24 +4,63 @@
 
 {% block content %}
     <h1 class="text-light my-3">Личная страница</h1>
-    <div class="container-fluid rounded-5 inner-shadow my-4 bg-light pt-4 pb-1" style="max-width: 500px">
-        <p>Параметры поиска</p>
-        <button class="btn btn-warning my-3">Показать</button>
+    <div class="container-fluid rounded-5 inner-shadow mb-5 mt-4 bg-light pt-4 pb-1" style="max-width: 500px">
+        <form method="get">
+            {{ view.comment_filter.form.as_p }}
+            <button type="submit" class="btn btn-warning my-3">Показать</button>
+        </form>
     </div>
      <ul class="list-unstyled mt-4 mb-5">
-            {% for comment in comments.all|slice:'::-1' %}
-                <li class="inner-shadow my-4 bg-light border border-dark border-1 rounded-5 mx-auto overflow-hidden" style="max-width: 500px">
-                    <div class="text-center {% if not comment.accepted %}bg-warning{% else %}bg-success{% endif %} inner-shadow d-flex justify-content-between">
+            {% for comment in comments.all %}
+                <li id="comment-{{ comment.pk }}"
+                    class="inner-shadow my-4 bg-light border border-dark border-1 rounded-5 mx-auto overflow-hidden"
+                    style="max-width: 500px"
+                >
+                    <div class="text-center {% if not comment.accepted %}bg-warning{% else %}bg-success{% endif %}
+                    inner-shadow d-flex justify-content-between">
                         <span class="py-2 px-4"><strong>{{ comment.author }}</strong></span>
                         <span class="py-2 px-4">{{ comment.created_at|date:"d.m.Y H:i" }}</span>
                     </div>
                     <div class="py-3">
                         {{ comment.text }}
                     </div>
+                    <button class="btn-sm btn-danger my-3" onclick="deleteComment('{% url 'delete_comment' comment.pk %}', {{ comment.pk }})">Удалить</button>
                     {% if not comment.accepted %}
-                        <a href="{% url 'accept_comment' comment.pk %}" class="btn btn-warning my-3">Принять</a>
+
+                        <button class="btn-sm btn-warning my-3" onclick="acceptComment('{% url 'accept_comment' comment.pk %}', {{ comment.pk }})">Принять</button>
                     {% endif%}
                 </li>
             {% endfor %}
         </ul>
+{% endblock %}
+
+{% block head %}
+    <script>
+        function acceptComment(url, pk) {
+            fetch(url)
+                .then((response) => response.json())
+                .then((data) => {
+                    if (data.accepted) {
+                        let comment = document.querySelector(`#comment-${pk}`)
+                        comment.firstElementChild.classList.remove('bg-warning')
+                        comment.firstElementChild.classList.add('bg-success')
+                        comment.lastElementChild.remove()
+                    }
+                })
+                .catch((error) => console.log(error))
+        }
+
+        function deleteComment(url, pk) {
+            fetch(url)
+                .then((response) => response.json())
+                .then((data) => {
+                    if (data.deleted) {
+                        let comment = document.querySelector(`#comment-${pk}`)
+                        comment.remove()
+                    }
+                })
+                .catch((error) => console.log(error))
+        }
+
+    </script>
 {% endblock %}

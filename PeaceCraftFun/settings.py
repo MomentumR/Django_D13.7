@@ -46,6 +46,8 @@ INSTALLED_APPS = [
     'allauth',
     'allauth.account',
     'djcelery_email',
+    'django_filters',
+    ''
 ]
 
 MIDDLEWARE = [

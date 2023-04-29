@@ -10,9 +10,10 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, FormView, UpdateView
 from django.contrib.auth.models import Group
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 
 from env import TZ
+from .filters import CommentFilter
 from .models import Post, OneTimeCode, Comment
 from .forms import VerifyEmailForm, PostForm, CommentForm,NewsForm
 from .tasks import resend_verification_code
@@ -66,11 +67,11 @@ class PersonalPageView(ListView):
     template_name = 'pcf/personalPage.html'
     context_object_name = 'comments'
     extra_context = {'menu': menu}
-    paginate_by = 10
 
     def get_queryset(self):
-        queryset = Comment.objects.filter(post__author=self.request.user)
-        return queryset
+        queryset = Comment.objects.filter(post__author=self.request.user).order_by('-created_at')
+        self.comment_filter = CommentFilter(self.request.GET or None, user=self.request.user, queryset=queryset)
+        return self.comment_filter.qs
 
 
 class VerifyEmailView(FormView):
@@ -110,7 +111,6 @@ class NewsCreationView(FormView):
     def form_valid(self, form):
         send_news_to_subscribers(form.cleaned_data['subject'], form.cleaned_data['content'])
         return super().form_valid(form)
-
 
 
 @login_required
@@ -167,8 +167,17 @@ def accept_comment(request, pk):
     if not comment.accepted:
         comment.accepted = True
         comment.save()
-    return redirect('personal_page')
+    return JsonResponse({'accepted': True})
 
+
+@login_required
+def delete_comment(request, pk):
+    comment = Comment.objects.get(pk=pk)
+    if comment.post.author != request.user:
+        raise PermissionDenied('Удалить отклик может только автор объявления, '
+                               'под которым он было написан.')
+    comment.delete()
+    return JsonResponse({'deleted': True})
 
 
 def permission_denied_view(request, exception=None):
