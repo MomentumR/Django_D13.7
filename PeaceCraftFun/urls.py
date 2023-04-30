@@ -29,11 +29,5 @@ handler403 = 'pcf.views.permission_denied_view'
 handler404 = 'pcf.views.page_not_found_view'
 
 if settings.DEBUG:
-    import debug_toolbar
     urlpatterns += static(settings.MEDIA_URL,
                           document_root=settings.MEDIA_ROOT)
-    urlpatterns = [
-                      path('__debug__/', include(debug_toolbar.urls)),
-                  ] + urlpatterns
-
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

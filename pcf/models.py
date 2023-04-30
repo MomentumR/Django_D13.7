@@ -6,12 +6,13 @@ from django.core.cache import cache
 
 
 class Post(models.Model):
+    CATEGORY_CHOICES = [
+        ('TA', 'Танки'), ('HE', 'Хилы'), ('DD', 'ДД'), ('ME', 'Торговцы'),
+        ('GM', 'Гилдмастеры'),('QG', 'Квестгиверы'), ('BS', 'Кузнецы'),
+        ('TA', 'Кожевники'), ('PM', 'Зельевары'), ('SM', 'Мастера Заклинаний')
+    ]
     author = models.ForeignKey(User, on_delete=models.CASCADE)
-    category = models.CharField(max_length=2, choices=[
-        ('TA', 'Танки'), ('HE', 'Хилы'), ('DD', 'ДД'), ('ME', 'Торговцы'), ('GM', 'Гилдмастеры'),
-        ('QG', 'Квестгиверы'), ('BS', 'Кузнецы'), ('TA', 'Кожевники'), ('PM', 'Зельевары'),
-        ('SM', 'Мастера Заклинаний')
-        ])
+    category = models.CharField(max_length=2, choices=CATEGORY_CHOICES)
     title = models.CharField(max_length=255)
     content = RichTextField()
     created_at = models.DateTimeField(auto_now_add=True)
