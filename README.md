@@ -40,15 +40,19 @@
 
 ### Запуск:
 
-Linux:
+
 
 `python manage.py runserver` - запуск Django-сервера.
+
+`python manage.py migrate` - применение миграций.
+
+`python manage.py createsuperuser` - создание учетной записи админа.
+
+Linux:
 
 `celery -A PeaceCraftFun worker -l info -B` - запуск Celery-воркера с Beat
 
 Windows: 
-
-`python manage.py runserver` - запуск Django-сервера.
 
 `celery -A PeaceCraftFun worker -l info` - запуск Celery-воркера.
 
