@@ -9,8 +9,6 @@ menu = [{'title': 'Главная', 'url_name': 'home'},
         {'title': 'Добавить', 'url_name': 'post_add'},
         {'title': 'Рассылка', 'url_name': 'news'},
         {'title': 'Личка', 'url_name': 'personal_page'},
-        {'title': 'Подписаться', 'url_name': 'subscribe'},
-        {'title': 'Отписаться', 'url_name': 'unsubscribe'},
         {'title': 'Выход', 'url_name': 'account_logout'},
         {'title': 'Вход', 'url_name': 'account_login'},
         ]

@@ -11354,3 +11354,31 @@ a.fa-brands {
     max-width: 100%;
 }
 
+.circular-button {
+  display: block;
+  width: 60px;
+  height: 60px;
+  border-radius: 30px;
+  background-color: #007bff;
+  color: #fff;
+  text-align: center;
+  line-height: 60px;
+  font-size: 24px;
+  position: fixed;
+  bottom: 90px;
+  right: 20px;
+  z-index: 999;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.circular-button:hover {
+  width: 200px;
+  color: #fff;
+}
+
+.circular-button i {
+  margin-top: 8px;
+}
+
+

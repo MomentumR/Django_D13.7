@@ -159,11 +159,38 @@
         </div>
     </div>
 {% endif %}
+{% if is_authenticated and not is_subscribed and request.path != '/verify_email/' %}
+    <a href="{% url 'subscribe' %}" class="circular-button inner-shadow overflow-hidden" title="Подписаться на новостную рассылку"><i class="fa-solid fa-bell"></i></a>
+{% elif is_authenticated and is_subscribed and request.path != '/verify_email/' %}
+    <a href="{% url 'unsubscribe' %}" class="circular-button inner-shadow overflow-hidden" title="Отписаться от новостной рассылки"><i class="fa-solid fa-ban"></i></a>
+{% endif %}
 
-
-{% endwith %}
 <!-- JS-->
 <script>const csrfToken = `{{ csrf_token }}`</script>
 <script src="{% static 'pcf/js/bootstrap.bundle.min.js' %}"></script>
+{% if is_authenticated and not is_subscribed and request.path != '/verify_email/' %}
+    <script>
+        let subscription_button = document.querySelector('.circular-button')
+        console.log(subscription_button)
+        subscription_button.addEventListener('mouseover', (event) => {
+            subscription_button.innerHTML = 'Подписаться'
+        })
+        subscription_button.addEventListener('mouseout', (event) => {
+            subscription_button.innerHTML = '<i class="fa-solid fa-bell"></i>'
+        })
+    </script>
+{% elif is_authenticated and is_subscribed and request.path != '/verify_email/' %}
+    <script>
+        let subscription_button = document.querySelector('.circular-button')
+        console.log(subscription_button)
+        subscription_button.addEventListener('mouseover', (event) => {
+            subscription_button.innerHTML = 'Отписаться'
+        })
+        subscription_button.addEventListener('mouseout', (event) => {
+            subscription_button.innerHTML = '<i class="fa-solid fa-ban"></i>'
+        })
+    </script>
+{% endif %}
+{% endwith %}
 </body>
 </html>
