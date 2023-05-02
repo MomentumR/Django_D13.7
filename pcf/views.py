@@ -184,7 +184,8 @@ def unsubscribe(request):
         group = Group.objects.get(name='subscribed_users')
         group.user_set.remove(request.user)
         return render(request, 'pcf/message.html', context={'title': 'Отписка',
-                                                            'message': 'Вы отписались от новостной рассылки.'})
+                                                            'message': 'Вы отписались от новостной рассылки.',
+                                                            'menu': menu})
     else:
         return redirect('home')
 
@@ -197,7 +198,8 @@ def subscribe(request):
         group = Group.objects.get(name='subscribed_users')
         group.user_set.add(request.user)
         return render(request, 'pcf/message.html', context={'title': 'Подписка',
-                                                            'message': 'Вы подписались на новостную рассылку.'})
+                                                            'message': 'Вы подписались на новостную рассылку.',
+                                                            'menu': menu})
     else:
         return redirect('home')
 
