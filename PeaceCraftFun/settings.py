@@ -47,6 +47,8 @@ INSTALLED_APPS = [
     'allauth.account',
     'djcelery_email',
     'django_filters',
+    'rest_framework',
+    'api.apps.ApiConfig',
 ]
 
 MIDDLEWARE = [

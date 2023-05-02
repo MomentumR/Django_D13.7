@@ -23,7 +23,9 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('pcf.urls'), name='pcf'),
     path('accounts/', include('allauth.urls'), name='accounts'),
+    path('api/', include('api.urls'), name='api'),
 ]
+
 
 handler403 = 'pcf.views.permission_denied_view'
 handler404 = 'pcf.views.page_not_found_view'
